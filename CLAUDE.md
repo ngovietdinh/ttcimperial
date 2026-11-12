@@ -33,7 +33,7 @@
 
 - Mặt bằng Grand Presidential do AI vẽ có ba giường (mô tả chỉ có một phòng ngủ chính) và ảnh chỉ rộng 1200 px — cần tạo lại.
 - Junior Suite chưa có ảnh thật; ảnh phòng ngủ hiện là ảnh minh họa.
-- Chưa có video chuyển cảnh nào trong `assets/video/`.
+- Video Presidential bắt đầu từ một mặt bằng khác với ảnh `assets/plans/presidential.jpg` đang dùng — cần ảnh mặt bằng mới của người dùng để hai thứ khớp nhau.
 - 3 căn hộ (Apartment) chưa đưa vào trang vì chưa có diện tích.
 - Logo đang là chữ; chưa có file logo chính thức.
 - `blender/` chỉ dùng để dựng lại khung bố cục khi cần góc máy mới (`pip install bpy`, rồi `python3 blender/render_rooms.py`); `tower.py` hiện không dùng trên web.
