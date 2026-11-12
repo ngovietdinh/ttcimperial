@@ -176,6 +176,17 @@ body[data-view="photo"] .photo img { animation: drift 16s ease-out forwards; }
 .photo-title { font: 500 32px/1.1 var(--serif); margin-top: 4px; }
 
 /* ---------- Chuyển cảnh, tải ---------- */
+.bloom {
+  position: fixed; inset: 0; z-index: 8; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), #fff6df 0%, #ffd98f 30%, #f0a94a 62%, #b06a22 100%);
+  clip-path: circle(0 at var(--x, 50%) var(--y, 50%));
+  transition: clip-path .75s cubic-bezier(.5, 0, .2, 1), opacity .7s ease;
+}
+.bloom.on { opacity: 1; clip-path: circle(150vmax at var(--x, 50%) var(--y, 50%)); }
+.rush { filter: blur(6px) brightness(1.25); }
+.hero-box, .turn-box { transition-property: transform, filter; transition-duration: .9s; transition-timing-function: cubic-bezier(.6, 0, .2, 1); }
+.turn-box { transition-duration: 1s; }
+.turn.arrive .turn-box { transform: scale(1.18); filter: blur(4px); transition: none; }
 .clip { position: fixed; inset: 0; z-index: 8; background: #05070f; opacity: 0; pointer-events: none; transition: opacity .5s ease; cursor: pointer; }
 .clip.on { opacity: 1; pointer-events: auto; }
 .clip video { width: 100%; height: 100%; object-fit: cover; display: block; }

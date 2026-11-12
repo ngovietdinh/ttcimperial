@@ -93,6 +93,15 @@ function playClip(key) {
 }
 function hideClip() { $('clip').classList.remove('on'); setTimeout(() => $('clipVideo').pause(), 600); }
 
+// Lóe sáng vàng lan ra từ điểm (x, y) trên màn hình, che lúc đổi cảnh — thay cho màn đen.
+async function bloomIn(x, y) {
+  const b = $('bloom');
+  b.style.setProperty('--x', x + 'px'); b.style.setProperty('--y', y + 'px');
+  b.classList.add('on');
+  await wait(750);
+}
+function bloomOut() { $('bloom').classList.remove('on'); }
+
 /* ========================= Màn tòa nhà ========================= */
 const heroBox = $('heroBox'), heroSvg = $('heroSvg');
 const SVGNS = 'http://www.w3.org/2000/svg';
@@ -167,12 +176,18 @@ async function enterFloor(id) {
     hideClip();
     busy = false; return;
   }
-  heroBox.style.transform = 'scale(2.3)';
-  await wait(650);
-  await veil(true);
+  // Phóng vào tầng được chọn, ảnh nhòe dần, ánh đèn cửa sổ lóe lên rồi mặt bằng hiện ra từ trong quầng sáng
+  const r = heroBox.getBoundingClientRect();
+  heroBox.style.transform = 'scale(3.2)';
+  heroBox.classList.add('rush');
+  await wait(450);
+  await bloomIn(r.left + cx * r.width, r.top + cy * r.height);
   if (id === 'lobby') await openPhoto(LOBBY.photo, LOBBY.eyebrow, LOBBY.title, 'tower');
   else await showPlan(FLOOR_ROOM(id), `Tầng ${id}`);
-  await veil(false);
+  heroBox.classList.remove('rush');
+  turn.classList.add('arrive'); void turn.offsetWidth; turnBox.style.transition = ''; turn.classList.remove('arrive');
+  bloomOut();
+  await wait(500);
   busy = false;
 }
 
@@ -271,6 +286,7 @@ let zoomed = false;
 function zoomOut(instant) {
   zoomed = false;
   turnBox.style.transition = instant ? 'none' : '';
+  turnBox.classList.remove('rush');
   turnBox.style.transform = '';
   turn.classList.remove('zoomed');
 }
@@ -279,8 +295,9 @@ async function enterSpot(s) {
   const [x, y] = spotXY(current.key, current.idx, s.id);
   turnBox.style.transition = '';
   turnBox.style.transformOrigin = `${x * 100}% ${y * 100}%`;
-  turnBox.style.transform = 'scale(2.6)';
+  turnBox.style.transform = s.photo ? 'scale(3.4)' : 'scale(2.6)';
   zoomed = true; turn.classList.add('zoomed');
+  if (s.photo) turnBox.classList.add('rush');
   const clip = `${current.key}.${s.id}`;
   if (s.photo && haveVideo.has(clip) && !reduceMotion) {
     await wait(350);
@@ -289,7 +306,7 @@ async function enterSpot(s) {
     hideClip();
     busy = false; return;
   }
-  await wait(1000);
+  await wait(s.photo ? 800 : 1000);
   if (s.photo) await openPhoto(s.photo, `${ROOMS[current.key].name} · ${KIND[s.kind]}`, s.label, 'plan');
   busy = false;
 }
