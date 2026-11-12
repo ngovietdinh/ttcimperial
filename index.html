@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TTC Imperial Hotel Huế — Khám phá 3D</title>
+<meta name="description" content="Khám phá tòa nhà, mặt bằng và không gian các hạng phòng của TTC Imperial Hotel Huế.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-view="loading">
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-box" id="heroBox">
+      <img id="heroImg" src="assets/hero/tower.jpg" alt="TTC Imperial Hotel Huế lúc chạng vạng (ảnh minh họa)" draggable="false">
+      <svg id="heroSvg" aria-hidden="true"></svg>
+    </div>
+  </section>
+
+  <header class="top">
+    <a class="brand" href="./" aria-label="Về tòa nhà">
+      <span class="brand-name">TTC Imperial</span>
+      <span class="brand-sub">Hotel · Huế</span>
+    </a>
+    <nav class="nav" aria-label="Hạng phòng">
+      <button data-room="deluxe">Deluxe</button>
+      <button data-room="junior">Junior Suite</button>
+      <button data-room="imperial">Imperial Suite</button>
+      <button data-room="presidential">Presidential</button>
+      <button data-room="lobby">Sảnh</button>
+    </nav>
+  </header>
+
+  <!-- Màn tòa nhà -->
+  <section class="intro" aria-live="polite">
+    <p class="eyebrow">8 Hùng Vương · bên dòng sông Hương</p>
+    <h1>Chọn một tầng<br>để bước vào</h1>
+    <p class="hint">Rê chuột lên tòa nhà rồi bấm vào tầng, hoặc chọn tầng ở cột bên phải.</p>
+  </section>
+  <nav class="rail" id="rail" aria-label="Chọn tầng"></nav>
+  <div class="tip" id="tip" hidden></div>
+
+  <!-- Màn mặt bằng -->
+  <aside class="panel" id="panel" aria-live="polite">
+    <button class="back" id="backTower">← Tòa nhà</button>
+    <p class="eyebrow" id="pFloor"></p>
+    <h2 id="pName"></h2>
+    <dl class="facts" id="pFacts"></dl>
+    <p class="desc" id="pDesc"></p>
+    <ul class="feat" id="pFeat"></ul>
+    <div class="spots" id="pSpots"></div>
+    <p class="note" id="pNote"></p>
+  </aside>
+  <section class="turn" id="turn" aria-label="Mặt bằng 3D, kéo để xoay">
+    <div class="turn-box" id="turnBox">
+      <img id="turnImg" alt="" draggable="false">
+      <div id="hotspots"></div>
+    </div>
+    <div class="turn-ctl">
+      <button id="turnPrev" aria-label="Xoay trái">‹</button>
+      <span>Kéo để xoay</span>
+      <button id="turnNext" aria-label="Xoay phải">›</button>
+    </div>
+  </section>
+
+  <!-- Màn ảnh thật -->
+  <section class="photo" id="photo" aria-hidden="true">
+    <img id="photoImg" alt="">
+    <div class="photo-bar">
+      <button class="back" id="backPlan">← Mặt bằng</button>
+      <div>
+        <p class="eyebrow" id="phEyebrow"></p>
+        <p class="photo-title" id="phTitle"></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="veil" id="veil"></div>
+  <div class="loading" id="loading"><span>TTC Imperial</span><i id="loadPct">Đang tải…</i></div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
