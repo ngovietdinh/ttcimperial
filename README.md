@@ -18,7 +18,8 @@ Không cần bước build. Đưa nguyên thư mục lên bất kỳ dịch vụ
 - `assets/photos/` — ảnh phòng: ảnh thật của khách sạn, riêng `junior-bedroom.jpg` là ảnh minh họa AI.
 - `assets/turn/turn.json` — vị trí điểm bấm trên mặt bằng, tính từ khung Blender.
 - `blender/` — mã dựng khung bố cục: `rooms.py` + `render_rooms.py` (mặt bằng), `tower.py` (khối tòa nhà 3D, hiện không dùng trên web).
-- `ai-kit/` — ảnh bố cục và câu lệnh đã dùng để tạo ảnh bằng Gemini.
+- `assets/video/` — video chuyển cảnh (tùy chọn). Tên file khai báo trong `main.js` (`VIDEOS`); có file nào trang phát file đó, thiếu thì chuyển cảnh bằng phóng ảnh.
+- `ai-kit/` — ảnh bố cục và câu lệnh tạo ảnh (`HUONG-DAN.md`) và tạo video (`HUONG-DAN-VIDEO.md`) bằng Gemini.
 
 ## Chỗ đang là giả định (cần số liệu thật)
 

@@ -176,6 +176,9 @@ body[data-view="photo"] .photo img { animation: drift 16s ease-out forwards; }
 .photo-title { font: 500 32px/1.1 var(--serif); margin-top: 4px; }
 
 /* ---------- Chuyển cảnh, tải ---------- */
+.clip { position: fixed; inset: 0; z-index: 8; background: #05070f; opacity: 0; pointer-events: none; transition: opacity .5s ease; cursor: pointer; }
+.clip.on { opacity: 1; pointer-events: auto; }
+.clip video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .veil { position: fixed; inset: 0; z-index: 8; background: var(--navy); opacity: 0; pointer-events: none; transition: opacity .45s ease; }
 .veil.on { opacity: 1; }
 .loading {

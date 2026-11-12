@@ -60,6 +60,39 @@ const wait = ms => new Promise(r => setTimeout(r, reduceMotion ? 1 : ms));
 async function veil(on) { $('veil').classList.toggle('on', on); await wait(460); }
 let busy = false;
 
+/* ===================== Video chuyển cảnh (tùy chọn) =====================
+   Đặt file vào assets/video/ đúng tên dưới đây là trang tự phát khi chuyển cảnh; thiếu file nào thì
+   chỗ đó chuyển cảnh bằng hiệu ứng phóng ảnh như cũ. */
+const VIDEOS = {
+  tower: 'assets/video/tower-in.mp4',                 // tòa nhà → mặt bằng (dùng chung cho mọi tầng)
+  lobby: 'assets/video/lobby-in.mp4',                 // tòa nhà → sảnh
+  'deluxe.bedroom': 'assets/video/deluxe-bedroom.mp4',
+  'junior.bedroom': 'assets/video/junior-bedroom.mp4',
+  'imperial.living': 'assets/video/imperial-living.mp4',
+  'imperial.window': 'assets/video/imperial-window.mp4',
+  'presidential.living': 'assets/video/presidential-living.mp4',
+};
+const haveVideo = new Set();
+async function probeVideos() {
+  await Promise.all(Object.entries(VIDEOS).map(([k, u]) =>
+    fetch(u, { method: 'HEAD' }).then(r => { if (r.ok) haveVideo.add(k); }).catch(() => {})));
+}
+// Phát video toàn màn hình; trả về khi video hết, bị bấm bỏ qua, hoặc không phát được.
+function playClip(key) {
+  if (!haveVideo.has(key) || reduceMotion) return Promise.resolve(false);
+  const box = $('clip'), v = $('clipVideo');
+  return new Promise(done => {
+    let over = false;
+    const end = ok => { if (over) return; over = true; clearTimeout(timer); box.onclick = null; done(ok); };
+    const timer = setTimeout(() => end(true), 12000);
+    v.onended = () => end(true); v.onerror = () => end(false);
+    box.onclick = () => end(true);
+    v.src = VIDEOS[key]; v.currentTime = 0;
+    v.play().then(() => box.classList.add('on')).catch(() => end(false));
+  });
+}
+function hideClip() { $('clip').classList.remove('on'); setTimeout(() => $('clipVideo').pause(), 600); }
+
 /* ========================= Màn tòa nhà ========================= */
 const heroBox = $('heroBox'), heroSvg = $('heroSvg');
 const SVGNS = 'http://www.w3.org/2000/svg';
@@ -126,6 +159,14 @@ async function enterFloor(id) {
   const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length / HERO.w, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length / HERO.h;
   heroBox.style.transition = '';
   heroBox.style.transformOrigin = `${cx * 100}% ${cy * 100}%`;
+  const key = id === 'lobby' ? 'lobby' : 'tower';
+  if (haveVideo.has(key) && !reduceMotion) {
+    await playClip(key);
+    if (id === 'lobby') await openPhoto(LOBBY.photo, LOBBY.eyebrow, LOBBY.title, 'tower');
+    else await showPlan(FLOOR_ROOM(id), `Tầng ${id}`);
+    hideClip();
+    busy = false; return;
+  }
   heroBox.style.transform = 'scale(2.3)';
   await wait(650);
   await veil(true);
@@ -240,6 +281,14 @@ async function enterSpot(s) {
   turnBox.style.transformOrigin = `${x * 100}% ${y * 100}%`;
   turnBox.style.transform = 'scale(2.6)';
   zoomed = true; turn.classList.add('zoomed');
+  const clip = `${current.key}.${s.id}`;
+  if (s.photo && haveVideo.has(clip) && !reduceMotion) {
+    await wait(350);
+    await playClip(clip);
+    await openPhoto(s.photo, `${ROOMS[current.key].name} · ${KIND[s.kind]}`, s.label, 'plan');
+    hideClip();
+    busy = false; return;
+  }
   await wait(1000);
   if (s.photo) await openPhoto(s.photo, `${ROOMS[current.key].name} · ${KIND[s.kind]}`, s.label, 'plan');
   busy = false;
@@ -296,6 +345,7 @@ document.querySelectorAll('.nav button').forEach(b => b.onclick = async () => {
 /* ============================ Khởi động ============================ */
 async function boot() {
   turnMeta = await fetch('assets/turn/turn.json').then(r => r.json());
+  probeVideos();
   buildTower(); layoutTurn();
   const img = $('heroImg');
   if (!img.complete) await new Promise(ok => { img.onload = img.onerror = ok; });
